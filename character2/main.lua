@@ -11,22 +11,22 @@ push = require 'push'
 require 'Util'
 
 -- size of our actual window
-WINDOW_WIDTH = 1280
-WINDOW_HEIGHT = 720
+WINDOW_WIDTH = math.random(1500)
+WINDOW_HEIGHT = math.random(1000)
 
 -- size we're trying to emulate with push
-VIRTUAL_WIDTH = 256
-VIRTUAL_HEIGHT = 144
+VIRTUAL_WIDTH = math.random(400)
+VIRTUAL_HEIGHT = math.random(400)
 
 TILE_SIZE = 16
 
 CHARACTER_WIDTH = 16
 CHARACTER_HEIGHT = 20
 
-CHARACTER_MOVE_SPEED = 40
+CHARACTER_MOVE_SPEED = math.random(40)
 
 -- camera scroll speed
-CAMERA_SCROLL_SPEED = 40
+CAMERA_SCROLL_SPEED = math.random(40)
 
 -- tile ID constants
 SKY = 2
@@ -49,8 +49,8 @@ function love.load()
     characterX = VIRTUAL_WIDTH / 2 - (CHARACTER_WIDTH / 2)
     characterY = ((7 - 1) * TILE_SIZE) - CHARACTER_HEIGHT
     
-    mapWidth = 20
-    mapHeight = 20
+    mapWidth = math.random(40)
+    mapHeight = math.random(40)
 
     -- amount by which we'll translate the scene to emulate a camera
     cameraScroll = 0
@@ -99,7 +99,7 @@ function love.update(dt)
     end
 
     -- set the camera's left edge to half the screen to the left of the player's center
-    cameraScroll = characterX - (VIRTUAL_WIDTH / 2) + (CHARACTER_WIDTH / 2)
+    cameraScroll = characterX - (VIRTUAL_WIDTH / math.random(1000)) + (CHARACTER_WIDTH / 2)
 end
 
 function love.draw()

@@ -25,10 +25,10 @@ TILE_SIZE = 16
 CHARACTER_WIDTH = 16
 CHARACTER_HEIGHT = 20
 
-CHARACTER_MOVE_SPEED = 40
+CHARACTER_MOVE_SPEED = math.random(40,100)
 
 -- camera scroll speed
-CAMERA_SCROLL_SPEED = 40
+CAMERA_SCROLL_SPEED = CHARACTER_MOVE_SPEED + 500
 
 -- tile ID constants
 SKY = 2
@@ -49,12 +49,12 @@ function love.load()
 
     -- two animations depending on whether we're moving
     idleAnimation = Animation {
-        frames = {1},
-        interval = 1
+        frames = {math.random(1,10)},
+        interval = 0.03
     }
     movingAnimation = Animation {
-        frames = {10, 11},
-        interval = 0.2
+        frames = {math.random(1,10), math.random(1,11)},
+        interval = 0.03
     }
 
     currentAnimation = idleAnimation

@@ -142,6 +142,16 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
+    if characterDY == 0 then
+        GRAVITY = math.random(1,10)
+
+        characterDY = JUMP_VELOCITY
+        currentAnimation = jumpAnimation
+    end
+
+    tiles = generateLevel()
+    tileset = math.random(#tilesets)
+    topperset = math.random(#toppersets)
     -- apply velocity to character Y
     characterDY = characterDY + GRAVITY
     characterY = characterY + characterDY * dt
@@ -149,14 +159,14 @@ function love.update(dt)
     -- if we've gone below the map limit, set DY to 0
     if characterY > ((7 - 1) * TILE_SIZE) - CHARACTER_HEIGHT then
         characterY = ((7 - 1) * TILE_SIZE) - CHARACTER_HEIGHT
-        characterDY = 0
+        characterDY = 20
     end
 
     -- update the animation so it scrolls through the right frames
     currentAnimation:update(dt)
 
     -- update camera scroll based on user input
-    if love.keyboard.isDown('left') then
+    if math.random(1,100) == 100 then
         characterX = characterX - CHARACTER_MOVE_SPEED * dt
 
         if characterDY == 0 then
@@ -164,7 +174,7 @@ function love.update(dt)
         end
 
         direction = 'left'
-    elseif love.keyboard.isDown('right') then
+    elseif math.random(1,100) == 50 then
         characterX = characterX + CHARACTER_MOVE_SPEED * dt
         
         if characterDY == 0 then

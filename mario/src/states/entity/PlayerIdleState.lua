@@ -10,12 +10,17 @@ PlayerIdleState = Class{__includes = BaseState}
 
 function PlayerIdleState:init(player)
     self.player = player
-
-    self.animation = Animation {
-        frames = {1},
-        interval = 1
-    }
-
+    if love.keyboard.isDown('down') then
+        self.animation = Animation {
+            frames = {10},
+            interval = 1
+        }
+    else
+        self.animation = Animation {
+            frames = {1},
+            interval = 1
+        }
+    end
     self.player.currentAnimation = self.animation
 end
 

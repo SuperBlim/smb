@@ -14,10 +14,18 @@ function SnailMovingState:init(tilemap, player, snail)
     self.tilemap = tilemap
     self.player = player
     self.snail = snail
-    self.animation = Animation {
-        frames = {49, 50},
-        interval = 0.5
-    }
+    self.ver = math.random(13,14)
+    if self.ver == 13 then
+        self.animation = Animation {
+            frames = {49, 50},
+            interval = 0.5
+        }
+    elseif self.ver == 14 then
+        self.animation = Animation {
+            frames = {53, 54},
+            interval = 0.5
+        }
+    end
     self.snail.currentAnimation = self.animation
 
     self.movingDirection = math.random(2) == 1 and 'left' or 'right'
@@ -86,6 +94,8 @@ function SnailMovingState:update(dt)
     local diffX = math.abs(self.player.x - self.snail.x)
 
     if diffX < 5 * TILE_SIZE then
-        self.snail:changeState('chasing')
+        if not hidden == true then
+            self.snail:changeState('chasing')
+        end
     end
 end

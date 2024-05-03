@@ -10,11 +10,19 @@ PlayerWalkingState = Class{__includes = BaseState}
 
 function PlayerWalkingState:init(player)
     self.player = player
-    self.animation = Animation {
-        frames = {10, 11},
-        interval = 0.1
-    }
-    self.player.currentAnimation = self.animation
+    if love.keyboard.isDown('down') then
+        self.animation = Animation {
+            frames = {4, 5},
+            interval = 0.1
+        }
+        self.player.currentAnimation = self.animation
+    else
+        self.animation = Animation {
+            frames = {10, 11},
+            interval = 0.1
+        }
+        self.player.currentAnimation = self.animation
+    end
 end
 
 function PlayerWalkingState:update(dt)
@@ -39,13 +47,23 @@ function PlayerWalkingState:update(dt)
             self.player.dy = 0
             self.player:changeState('falling')
         elseif love.keyboard.isDown('left') then
-            self.player.x = self.player.x - PLAYER_WALK_SPEED * dt
+            if love.keyboard.isDown('q') then
+                self.player.x = self.player.x - PLAYER_WALK_SPEED * dt * 2.5
+            else
+                self.player.x = self.player.x - PLAYER_WALK_SPEED * dt
+            end
+            
             self.player.direction = 'left'
             self.player:checkLeftCollisions(dt)
         elseif love.keyboard.isDown('right') then
-            self.player.x = self.player.x + PLAYER_WALK_SPEED * dt
+            if love.keyboard.isDown('q') then
+                self.player.x = self.player.x + PLAYER_WALK_SPEED * dt * 2.5
+            else
+                self.player.x = self.player.x + PLAYER_WALK_SPEED * dt
+            end
             self.player.direction = 'right'
             self.player:checkRightCollisions(dt)
+           
         end
     end
 
@@ -60,4 +78,6 @@ function PlayerWalkingState:update(dt)
     if love.keyboard.wasPressed('space') then
         self.player:changeState('jump')
     end
+
+    
 end

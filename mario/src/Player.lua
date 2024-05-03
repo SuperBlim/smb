@@ -13,10 +13,16 @@ Player = Class{__includes = Entity}
 function Player:init(def)
     Entity.init(self, def)
     self.score = 0
+    self.y = 0
 end
 
 function Player:update(dt)
     Entity.update(self, dt)
+    if love.keyboard.isDown('down') then
+        hidden = true
+    else
+        hidden = false
+    end
 end
 
 function Player:render()
@@ -27,7 +33,6 @@ function Player:checkLeftCollisions(dt)
     -- check for left two tiles collision
     local tileTopLeft = self.map:pointToTile(self.x + 1, self.y + 1)
     local tileBottomLeft = self.map:pointToTile(self.x + 1, self.y + self.height - 1)
-
     -- place player outside the X bounds on one of the tiles to reset any overlap
     if (tileTopLeft and tileBottomLeft) and (tileTopLeft:collidable() or tileBottomLeft:collidable()) then
         self.x = (tileTopLeft.x - 1) * TILE_SIZE + tileTopLeft.width - 1

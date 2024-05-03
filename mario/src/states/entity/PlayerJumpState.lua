@@ -19,8 +19,12 @@ function PlayerJumpState:init(player, gravity)
 end
 
 function PlayerJumpState:enter(params)
-    gSounds['jump']:play()
-    self.player.dy = PLAYER_JUMP_VELOCITY
+    gSounds['jump']:play()  
+    if love.keyboard.isDown('q') then
+        self.player.dy = PLAYER_JUMP_VELOCITY * 1.3
+    else
+        self.player.dy = PLAYER_JUMP_VELOCITY
+    end
 end
 
 function PlayerJumpState:update(dt)
@@ -46,15 +50,24 @@ function PlayerJumpState:update(dt)
 
     -- else test our sides for blocks
     elseif love.keyboard.isDown('left') then
+        if love.keyboard.isDown('q') then
+            self.player.x = self.player.x - PLAYER_WALK_SPEED * dt * 3
+        else
+            self.player.x = self.player.x - PLAYER_WALK_SPEED * dt
+        end
+        
         self.player.direction = 'left'
-        self.player.x = self.player.x - PLAYER_WALK_SPEED * dt
         self.player:checkLeftCollisions(dt)
     elseif love.keyboard.isDown('right') then
+        if love.keyboard.isDown('q') then
+            self.player.x = self.player.x + PLAYER_WALK_SPEED * dt * 3
+        else
+            self.player.x = self.player.x + PLAYER_WALK_SPEED * dt
+        end
         self.player.direction = 'right'
-        self.player.x = self.player.x + PLAYER_WALK_SPEED * dt
         self.player:checkRightCollisions(dt)
+    
     end
-
     -- check if we've collided with any collidable game objects
     for k, object in pairs(self.player.level.objects) do
         if object:collides(self.player) then

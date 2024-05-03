@@ -5,6 +5,7 @@
     Author: Colton Ogden
     cogden@cs50.harvard.edu
 ]]
+math.randomseed(os.time())
 
 Class = require 'class'
 push = require 'push'
@@ -17,8 +18,8 @@ WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
 -- size we're trying to emulate with push
-VIRTUAL_WIDTH = 256
-VIRTUAL_HEIGHT = 144
+VIRTUAL_WIDTH = math.random(1,400)
+VIRTUAL_HEIGHT = math.random(1,400)
 
 TILE_SIZE = 16
 
@@ -28,14 +29,13 @@ CHARACTER_HEIGHT = 20
 CHARACTER_MOVE_SPEED = 40
 JUMP_VELOCITY = -200
 
-GRAVITY = 7
-
+GRAVITY = math.random(0,7)
 -- camera scroll speed
 CAMERA_SCROLL_SPEED = 40
 
 -- tile ID constants
 SKY = 2
-GROUND = 1
+GROUND = math.random(2)
 
 function love.load()
     math.randomseed(os.time())
@@ -52,16 +52,16 @@ function love.load()
 
     -- three animations depending on whether we're moving, jumping, or still
     idleAnimation = Animation {
-        frames = {1},
-        interval = 1
+        frames = {1,2,3,4,5,6,7,8,9,10,11},
+        interval = 0.03
     }
     movingAnimation = Animation {
-        frames = {10, 11},
-        interval = 0.2
+        frames = {1,2,3,4,5,6,7,8,9,10,11},
+        interval = 0.03
     }
     jumpAnimation = Animation {
-        frames = {3},
-        interval = 1
+        frames = {1,2,3,4,5,6,7,8,9,10,11},
+        interval = 0.03
     }
 
     currentAnimation = idleAnimation
@@ -76,8 +76,8 @@ function love.load()
     -- direction the character is facing
     direction = 'right'
     
-    mapWidth = 20
-    mapHeight = 20
+    mapWidth = math.random(1,400)
+    mapHeight = math.random(1,400)
 
     -- amount by which we'll translate the scene to emulate a camera
     cameraScroll = 0
@@ -117,13 +117,17 @@ function love.keypressed(key)
     end
 
     -- if we hit space and are on the ground...
-    if key == 'space' and characterDY == 0 then
+    if key == 'space' then
         characterDY = JUMP_VELOCITY
         currentAnimation = jumpAnimation
     end
 end
 
 function love.update(dt)
+    GROUND = math.random(2)
+    backgroundR = math.random(255) / 255
+    backgroundG = math.random(255) / 255
+    backgroundB = math.random(255) / 255
     -- apply velocity to character Y
     characterDY = characterDY + GRAVITY
     characterY = characterY + characterDY * dt
@@ -136,6 +140,7 @@ function love.update(dt)
 
     -- update the animation so it scrolls through the right frames
     currentAnimation:update(dt)
+    math.randomseed(os.time())
 
     -- update camera scroll based on user input
     if love.keyboard.isDown('left') then

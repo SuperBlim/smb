@@ -41,6 +41,7 @@ CHARACTER_MOVE_SPEED = 40
 JUMP_VELOCITY = -200
 
 GRAVITY = 7
+PLAYER_WALK_SPEED = 60
 
 -- camera scroll speed
 CAMERA_SCROLL_SPEED = 40
@@ -124,13 +125,10 @@ function love.resize(w, h)
 end
 
 function love.keypressed(key)
-    if key == 'escape' then
-        love.event.quit()
-    end
-
     -- if we hit space and are on the ground...
     if key == 'space' and characterDY == 0 then
         characterDY = JUMP_VELOCITY
+        PLAYER_JUMP_VELOCITY = PLAYER_JUMP_VELOCITY - 1
         currentAnimation = jumpAnimation
     end
 
@@ -139,6 +137,8 @@ function love.keypressed(key)
         tileset = math.random(#tilesets)
         topperset = math.random(#toppersets)
     end
+
+
 end
 
 function love.update(dt)
@@ -154,11 +154,13 @@ function love.update(dt)
 
     -- update the animation so it scrolls through the right frames
     currentAnimation:update(dt)
+    if math.random(10000) == 10 then
+        love.load()
+    end
 
     -- update camera scroll based on user input
     if love.keyboard.isDown('left') then
         characterX = characterX - CHARACTER_MOVE_SPEED * dt
-
         if characterDY == 0 then
             currentAnimation = movingAnimation
         end
@@ -166,7 +168,6 @@ function love.update(dt)
         direction = 'left'
     elseif love.keyboard.isDown('right') then
         characterX = characterX + CHARACTER_MOVE_SPEED * dt
-        
         if characterDY == 0 then
             currentAnimation = movingAnimation
         end

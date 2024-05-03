@@ -38,7 +38,7 @@ function LevelMaker.generate(width, height)
         end
 
         -- chance to just be emptiness
-        if math.random(7) == 1 then
+        if math.random(2) == 1 and not x == 1 then
             for y = 7, height do
                 table.insert(tiles[y],
                     Tile(x, y, tileID, nil, tileset, topperset))
@@ -55,33 +55,32 @@ function LevelMaker.generate(width, height)
             end
 
             -- chance to generate a pillar
-            if math.random(8) == 1 then
-                blockHeight = 2
+            if math.random(2) == 1 then
+                blockHeight = math.random(1,4)
                 
                 -- chance to generate bush on pillar
-                if math.random(8) == 1 then
-                    table.insert(objects,
-                        GameObject {
-                            texture = 'bushes',
-                            x = (x - 1) * TILE_SIZE,
-                            y = (4 - 1) * TILE_SIZE,
-                            width = 16,
-                            height = 16,
-                            
-                            -- select random frame from bush_ids whitelist, then random row for variance
-                            frame = BUSH_IDS[math.random(#BUSH_IDS)] + (math.random(4) - 1) * 7,
-                            collidable = false
-                        }
-                    )
-                end
+                
                 
                 -- pillar tiles
-                tiles[5][x] = Tile(x, 5, tileID, topper, tileset, topperset)
-                tiles[6][x] = Tile(x, 6, tileID, nil, tileset, topperset)
-                tiles[7][x].topper = nil
+                if blockHeight == 1 then 
+                    singletilever = math.random(1,6)
+                    tiles[singletilever][x] = Tile(x, singletilever, tileID, topper, tileset, topperset)
+                elseif blockHeight == 2 then
+                    tiles[5][x] = Tile(x, 5, tileID, nil, tileset, topperset)
+                    tiles[4][x] = Tile(x, 4, tileID, topper, tileset, topperset)
+                elseif blockHeight == 3 then
+                    tiles[6][x] = Tile(x, 6, tileID, nil, tileset, topperset)
+                    tiles[5][x] = Tile(x, 5, tileID, nil, tileset, topperset)
+                    tiles[4][x] = Tile(x, 4, tileID, topper, tileset, topperset)
+                elseif blockHeight == 4 then
+                    tiles[3][x] = Tile(x, 3, tileID, topper, tileset, topperset)
+                    tiles[6][x] = Tile(x, 6, tileID, nil, tileset, topperset)
+                    tiles[5][x] = Tile(x, 5, tileID, nil, tileset, topperset)
+                    tiles[4][x] = Tile(x, 4, tileID, nil, tileset, topperset)
+                end
             
             -- chance to generate bushes
-            elseif math.random(8) == 1 then
+            elseif math.random(3) == 1 then
                 table.insert(objects,
                     GameObject {
                         texture = 'bushes',
@@ -94,21 +93,21 @@ function LevelMaker.generate(width, height)
                     }
                 )
             end
-
+            
             -- chance to spawn a block
-            if math.random(10) == 1 then
+            if math.random(5) == 1 then
                 table.insert(objects,
 
                     -- jump block
                     GameObject {
                         texture = 'jump-blocks',
                         x = (x - 1) * TILE_SIZE,
-                        y = (blockHeight - 1) * TILE_SIZE,
+                        y = (blockHeight - math.random(1,3)) * TILE_SIZE,
+                        gemspawn = y,
                         width = 16,
                         height = 16,
-
                         -- make it a random variant
-                        frame = math.random(#JUMP_BLOCKS),
+                        frame =math.min(math.random(#JUMP_BLOCKS),30),
                         collidable = true,
                         hit = false,
                         solid = true,
@@ -118,25 +117,29 @@ function LevelMaker.generate(width, height)
 
                             -- spawn a gem if we haven't already hit the block
                             if not obj.hit then
-
                                 -- chance to spawn gem, not guaranteed
-                                if math.random(5) == 1 then
-
+                                if math.random(2) == 1 then
+                                    gframe = math.random(#GEMS)
                                     -- maintain reference so we can set it to nil
                                     local gem = GameObject {
                                         texture = 'gems',
                                         x = (x - 1) * TILE_SIZE,
-                                        y = (blockHeight - 1) * TILE_SIZE - 4,
+                                        y = (blockHeight - math.random(0,2)) * TILE_SIZE - 4,
                                         width = 16,
                                         height = 16,
-                                        frame = math.random(#GEMS),
+                                        frame = gframe,
                                         collidable = true,
                                         consumable = true,
                                         solid = false,
-
+--keepinmind
                                         -- gem has its own function to add to the player's score
                                         onConsume = function(player, object)
                                             gSounds['pickup']:play()
+                                            if gframe == 1 then
+                                                tiles[3][100] = Tile(100, 3, tileID, topper, tileset, topperset)
+                                                tiles[6][100] = Tile(100, 6, tileID, nil, tileset, topperset)
+                                                tiles[5][100] = Tile(100, 5, tileID, nil, tileset, topperset)
+                                                tiles[4][100] = Tile(100, 4, tileID, nil, tileset, topperset)                                            end
                                             player.score = player.score + 100
                                         end
                                     }
@@ -151,6 +154,9 @@ function LevelMaker.generate(width, height)
                                 end
 
                                 obj.hit = true
+                                obj.collidable = false
+                                obj.solid = false
+                                obj.frame = 30
                             end
 
                             gSounds['empty-block']:play()

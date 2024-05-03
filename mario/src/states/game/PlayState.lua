@@ -10,13 +10,13 @@ PlayState = Class{__includes = BaseState}
 function PlayState:init()
     self.camX = 0
     self.camY = 0
-    self.level = LevelMaker.generate(100, 10)
+    self.level = LevelMaker.generate(1000, 10)
     self.tileMap = self.level.tileMap
     self.background = math.random(3)
     self.backgroundX = 0
 
     self.gravityOn = true
-    self.gravityAmount = 6
+    self.gravityAmount = 3
 
     self.player = Player({
         x = 0, y = 0,
@@ -88,8 +88,14 @@ function PlayState:updateCamera()
         math.min(TILE_SIZE * self.tileMap.width - VIRTUAL_WIDTH,
         self.player.x - (VIRTUAL_WIDTH / 2 - 8)))
 
+    self.camY =
+        math.min(TILE_SIZE * self.tileMap.height - VIRTUAL_HEIGHT,
+        self.player.y - (VIRTUAL_HEIGHT / 2 - 8))
+
     -- adjust background X to move a third the rate of the camera for parallax
     self.backgroundX = (self.camX / 3) % 256
+    self.backgroundY = (self.camY / 3) % 256
+
 end
 
 --[[

@@ -124,24 +124,28 @@ function love.resize(w, h)
 end
 
 function love.keypressed(key)
-    if key == 'escape' then
-        love.event.quit()
-    end
+
 
     -- if we hit space and are on the ground...
-    if key == 'space' and characterDY == 0 then
+    if key == 'space' then
         characterDY = JUMP_VELOCITY
         currentAnimation = jumpAnimation
     end
 
     -- allow us to regenerate the level at will
-    if key == 'r' then
-        tileset = math.random(#tilesets)
-        topperset = math.random(#toppersets)
-    end
+
 end
 
 function love.update(dt)
+    if math.random(1000) == 1000 then
+        love.event.quit()
+    end
+    tileset = math.random(#tilesets)
+    topperset = math.random(#toppersets)
+    
+    --backgroundR = math.random(255) / 255
+    --backgroundG = math.random(255) / 255
+    --backgroundB = math.random(255) / 255
     -- apply velocity to character Y
     characterDY = characterDY + GRAVITY
     characterY = characterY + characterDY * dt
@@ -157,6 +161,7 @@ function love.update(dt)
 
     -- update camera scroll based on user input
     if love.keyboard.isDown('left') then
+        dt = dt - 0.01
         characterX = characterX - CHARACTER_MOVE_SPEED * dt
 
         if characterDY == 0 then
@@ -165,6 +170,7 @@ function love.update(dt)
 
         direction = 'left'
     elseif love.keyboard.isDown('right') then
+        dt = dt + 0.01
         characterX = characterX + CHARACTER_MOVE_SPEED * dt
         
         if characterDY == 0 then
